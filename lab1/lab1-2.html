@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="description"	content="Data Visualisation Exercise 1"/>
+	<meta name="keywords"		  content="HTML, CSS"/>
+	<meta name="author"			  content="Eu Jin"/>
+
+	<title>Task 1.2 JavaScript</title>
+	<!--Insert description of exercise  -->
+
+	<style>
+		body{background-color:  powderblue;}
+		h1{color: blue;}
+		p{color: darkblue;}
+		footer{background-color: lightgray;}
+		input{background-color: green;}
+		
+		.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.button1 {
+  background-color: #4CAF50; 
+  color: black; 
+  border: 2px solid #4CAF50;
+}
+
+.button1:hover {
+  background-color: white;
+  color: black;
+}
+
+.button2 {
+  background-color: #008CBA; 
+  color: black; 
+  border: 2px solid #008CBA;
+}
+
+.button2:hover {
+  background-color: white;
+  color: black;
+}
+
+.button3 {
+  background-color: #f44336; 
+  color: black; 
+  border: 2px solid #f44336;
+}
+
+.button3:hover {
+  background-color: white;
+  color: black; 
+}
+
+	</style>
+
+</head>
+
+<body>
+
+	<body>
+
+	<h1>Pets and the Pandemic</h1>
+	<h2>Author By Eu Jin</h2>
+
+<h3>
+A report from Animal Medicines Australia (AMA) has found that many Australians took the opportunity to introduce a pet into their household during the pandemic. Their survey indicated that there was a significant increase in the percent of households taking in a new dog, fish or bird. Their research also indicated that pets had a number of positive influences on their lives such as:
+
+<ul>
+  <li>Companionship</li>
+  <li>Better mental health</li>
+  <li>Joy and happiness</li>
+</ul>
+	
+	
+	<table style="width:100%">
+  <tr>
+		<th><button class="button button1" value="2019" onclick="pic(this)" >2019</button></th>
+		<th><button class="button button2" value="2021" onclick="pic(this)" >2021</button></th>
+		<th><button class="button button3" value="Both" onclick="pic(this)" >Both</button></th>
+  </tr>
+</table>
+
+<script>
+function pic(param) {
+  if (param.value=='2019') {
+   document.getElementById("png").src="Pets2019.png";
+  } else if(param.value=='2021'){
+    document.getElementById("png").src = "Pets2021.png";
+  } else if (param.value=='Both'){
+  	document.getElementById("png").src = "Pets-2019-2021.png";
+  }
+}
+</script>
+
+<center><img id="png" style="width:500px; height:300px;" /><br>
+	<i>Fig 2. Percent of most popular pets owned by Australians in 2021</i></a>
+</center><br>
+
+<h3>
+With the increase in pet ownership the AMA are encouraging policy makers to consider the needs of companion animals and their owners when considering rental, strata and body corporate regulations are well as accepting animals in public places and transport.
+</h3>
+
+	<footer>COS30045 Data Visualisation<br>
+	Semester 3 2022
+	</footer>
+
+</body>
+</html>

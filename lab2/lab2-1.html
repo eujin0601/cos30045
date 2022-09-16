@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="description"	content="Data Visualisation Exercise 2"/>
+	<meta name="keywords"		  content="HTML, CSS"/>
+	<meta name="author"			  content="Eu Jin"/>
+	
+	<title>Task 2.1 D3 Data Binding</title>
+	
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+	
+</head>
+<body>
+
+	<h1>The D3 Journey starts here...</h1>
+
+	<h2>Author : Eu Jin</h2>
+	<script>
+	
+	var dataset=[14, 5, 26, 23, 9];
+	
+		d3.select("body").selectAll("p")
+		.data(dataset)
+		.enter()
+		.append("p")
+		.text(function(d, i) {
+			//Revision on JavaScript, how to use IF block.
+			
+			return "i = " + i + " d = "+ d;
+			});
+			
+		</script>
+		
+		<p>
+			This paragraph is outside D3 script block
+		</p>
+		<footer>COS30045 Data Visualization - Lab 2</footer>
+		
+</body>

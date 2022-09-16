@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="description"	content="Data Visualisation Exercise 2"/>
+	<meta name="keywords"		  content="HTML, CSS, D3"/>
+	<meta name="author"			  content="Eu Jin"/>
+	
+	<title>Task 3.1 D3 Scaling your Charts</title>
+	
+	<script src="https://d3js.org/d3.v7.min.js"></script>
+	
+</head>
+<body>
+
+	<h1>Drawing with Data - Scatter Plot</h1>
+
+	<h2>Author : Eu Jin</h2>
+	
+	<script>
+	// ***Variable declarations***
+		var w = 500;
+		var h = 100;
+		var padding = 20;
+		var dataset=[ 
+					[5, 20], 
+					[500, 90], 
+					[250, 50], 
+					[100, 33], 
+					[330, 95], 
+					[410, 12], 
+					[475, 44], 
+					[25, 67], 
+					[85, 21], 
+					[220, 88] 
+					];
+		var xScale = d3.scaleLinear()
+					.domain([d3.min(dataset, function(d) {
+						return d[0]+5;
+					}),
+					d3.max(dataset, function(d) {
+					return d[0]+50;
+					})])
+					.range([padding, w - padding]);
+					
+		var yScale = d3.scaleLinear()
+					.domain([d3.min(dataset, function(d) {
+						return d[1];
+					}),
+					d3.max(dataset, function(d) {
+					return d[1]+10;
+					})])
+					.range([h - padding, padding]);
+					
+		var max=d3.max(dataset, function(d){
+			return d[0]
+		});
+					
+		var svg = d3.select("body") //Reference the id of the HTML element
+					.append("svg")
+					.attr("width",w)
+					.attr("height",h);
+		// ***Variable declarations***
+	
+		svg.selectAll("circle")
+			.data(dataset)
+			.enter()
+			.append("circle")
+			.attr("cx", function(d,i){
+				return xScale(d[0]);
+				})
+			.attr("cy", function(d){
+				return yScale(d[1]);
+				})
+			.attr("r", function(d) {
+				return 5;
+				})
+			.attr("fill", "slategrey")
+			.style("fill",function(d,i){
+				if(d[0]==max){
+					return "red";
+				}
+			});
+	
+		svg.selectAll("text")
+			.data(dataset)
+			.enter()
+			.append("text")
+			.attr("x",(item)=>{
+				return xScale(item[0])
+			})
+			.attr("y",(item)=>{
+				return yScale(item[1]+5)
+			})
+			.text((item)=>{
+				return item[0]+", "+item[1]
+			})
+			.attr("fill", "green");
+	</script>
+			<p>
+				This paragraph is outside D3 script block
+			</p>
+			<footer>COS30045 Data Visualization - Lab 3</footer>
+		
+	</body>
+	</html>

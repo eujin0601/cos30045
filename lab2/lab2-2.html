@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="description"	content="Data Visualisation Exercise 2"/>
+	<meta name="keywords"		  content="HTML, CSS"/>
+	<meta name="author"			  content="Eu Jin"/>
+	
+	<title>Task 2.2 D3 Drawing with Data - Bar Chart</title>
+	
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+	
+</head>
+<body>
+
+	<h1>The D3 Journey starts here...</h1>
+
+	<h2>Author : Eu Jin</h2>
+	<script>
+	var w = 125;
+	var h = 100;
+	var barPadding = 2;
+	var multiply = 4;
+	var dataset=[14, 5, 26, 23, 9];
+	
+	var svg = d3.select("body") //Reference the id of the HTML element
+	.append("svg")
+	.attr("width", w)
+	.attr("height", h);
+	
+	svg.selectAll("rect")
+		.data(dataset)
+		.enter()
+		.append("rect")
+		.attr("x", function(d, i) {
+			return i * (w / dataset.length); //Reference the column-name to get value
+			})
+		.attr("y", function(d) {
+			return d;
+			})
+		.attr("width", w / dataset.length - barPadding)
+		.attr("height", 100);
+			
+		</script>
+		
+		<p>
+			This paragraph is outside D3 script block
+		</p>
+		<footer>COS30045 Data Visualization - Lab 2</footer>
+		
+</body>
