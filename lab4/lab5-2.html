@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="description"	content="Data Visualisation Exercise 4"/>
+	<meta name="keywords"		  content="HTML, CSS, D3"/>
+	<meta name="author"			  content="Eu Jin"/>
+	
+	<title>Task 5.2 D3 Transitions</title>
+	
+	<style>
+	.button1 {
+      background-color: #008CBA; 
+      color: white; 
+      border: 2px solid #008CBA;
+    }
+
+	.button1:hover {
+      background-color: white;
+      color: black;
+	}
+	
+	.button2 {
+      background-color: #FFA500; 
+      color: white; 
+      border: 2px solid #FFA500;
+    }
+
+	.button2:hover {
+      background-color: white;
+      color: black;
+	}
+	
+	.button3 {
+      background-color: #228B22; 
+      color: white; 
+      border: 2px solid #228B22;
+    }
+
+	.button3:hover {
+      background-color: white;
+      color: black;
+	}
+	</style>
+
+	<script src="https://d3js.org/d3.v7.min.js"></script>
+	
+</head>
+<body>
+	<h1>Updates and Transitions</h1>
+	<h2>Author : Eu Jin</h2>
+	
+	<button class="button button1" id="trans1">Update</button>
+	<button class="button button2" id="trans2">Transition 1</button>
+	<button class="button button3" id="trans3">Transition 2</button>
+	<br>
+	<p id="body"></p>
+	<script>
+	
+	//Max value for data
+    var maxValue = 25;
+	
+	// width and height
+	var w = 600;
+	var h = 250;
+	
+	var barPadding = 10;
+	var dataset=[5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+					11, 12, 15, 20, 18, 17, 16, 18, 23, 25];
+	
+	var xScale = d3.scaleBand()
+					.domain(d3.range(dataset.length))
+					.rangeRound([0, w])
+					.paddingInner(0.05);
+					
+	var yScale = d3.scaleLinear()
+					.domain([d3.max(dataset,function(d){
+                        return 30;
+                    }),
+                    d3.min(dataset,function(d){
+                        return 0;
+                    })])
+					.range([0, h]);
+					
+	//Axis
+	var xAxis = d3.axisBottom()
+                .ticks(5)
+                .scale(xScale);
+
+    var yAxis = d3.axisLeft()
+                .ticks(5)
+                .scale(yScale);
+	
+	//Create SVG element
+	var svg = d3.select("#body") //Reference the id of the HTML element
+			.append("svg")
+			.attr("width", w+50)
+			.attr("height", h+50);
+	
+			//On Update click, update with new data
+			d3.select("#trans1")
+				.on("click", function() {
+					
+					//Random values for dataset
+					var numValues = dataset.length;
+							
+					dataset = [];
+							
+					for (var i = 0; i < numValues; i++) {
+						var newNumber = Math.floor(Math.random()* maxValue);
+						dataset.push(newNumber);
+					}
+					
+					//Update all rects
+					svg.selectAll("rect")
+					.data(dataset)
+					.attr("x", function(d, i){
+						return xScale(i)+20;
+					})
+					.attr("y", function(d){
+						return yScale(d);
+					})
+					.attr("width", xScale.bandwidth())
+					.attr("height", function(d) {
+						return h-yScale(d);})
+					.attr("fill", function(d){
+						return "rgb(0, 0, " + (d * 10) + ")";
+					});
+						console.log(dataset);
+					
+					//Update all texts
+					svg.selectAll("text")
+					.data(dataset)
+					.text(function(d) {
+						return d;
+					})
+					.attr("text-anchor", "middle")
+					.attr("x", function(d, i) {
+						return xScale(i)+20+ xScale.bandwidth()/2;;
+					})
+					.attr("y", function(d) {
+						return yScale(d)+14;
+					})
+					.attr("font-family", "sans-serif")
+					.attr("font-size", "11px")
+					.attr("fill", "white");
+				})
+				
+			//Transition 2
+            d3.select("#trans2")
+                .on("click", function(){
+                    var numValues = dataset.length;
+                    
+                    dataset = [];
+                    
+                    for (var i = 0; i < numValues; i++) {
+                        var newNumber = Math.floor(Math.random()* maxValue);
+                        dataset.push(newNumber);
+                    }
+
+                    svg.selectAll("rect")
+                    .data(dataset)
+                    //Update Smoothly
+                    .transition()
+                    .delay(function(d,i){
+                        return i/dataset.length*1000;
+                    })
+                    .duration(500)
+                    .transition()
+                    .duration(2000)
+                    .ease(d3.easeCircleOut)
+                    .attr("x", function(d, i){
+                        return xScale(i)+20;
+                    })
+                    .attr("y", function(d){
+                        return yScale(d);
+                    })
+                    .attr("width", xScale.bandwidth())
+                    .attr("height", function(d) {
+                        return h-yScale(d);})
+                    .attr("fill", function(d){
+                        return "rgb(0, 0, " + (d * 10) + ")";
+                    });
+                        console.log(dataset);
+
+                    svg.selectAll("text")
+                        .data(dataset)
+                        .text(function(d) {
+                        return d;
+                        })
+                        .attr("text-anchor", "middle")
+                        .attr("x", function(d, i) {
+                        return xScale(i)+20+ xScale.bandwidth()/2;;
+                        })
+                        .attr("y", function(d) {
+                        return yScale(d)+14;
+                        })
+                        .attr("font-family", "sans-serif")
+                        .attr("font-size", "11px")
+                        .attr("fill", "white");       
+            })
+			//Transition 3
+            d3.select("#trans3")
+                .on("click", function(){
+                    var numValues = dataset.length;
+                    
+                    dataset = [];
+                    
+                    for (var i = 0; i < numValues; i++) {
+                        var newNumber = Math.floor(Math.random()* maxValue);
+                        dataset.push(newNumber);
+                    }
+
+                    svg.selectAll("rect")
+                    .data(dataset)
+                    //Update Smoothly
+                    .transition()
+                    .delay(function(d,i){
+                        return i/dataset.length*1000;
+                    })
+                    .duration(500)
+                    .transition()
+                    .duration(2000)
+                    .ease(d3.easeElasticOut)
+                    .attr("x", function(d, i){
+                        return xScale(i)+20;
+                    })
+                    .attr("y", function(d){
+                        return yScale(d);
+                    })
+                    .attr("width", xScale.bandwidth())
+                    .attr("height", function(d) {
+                        return h-yScale(d);})
+                    .attr("fill", function(d){
+                        return "rgb(0, 0, " + (d * 10) + ")";
+                    });
+                        console.log(dataset);
+
+                    svg.selectAll("text")
+                        .data(dataset)
+                        .text(function(d) {
+                        return d;
+                        })
+                        .attr("text-anchor", "middle")
+                        .attr("x", function(d, i) {
+                        return xScale(i)+20+ xScale.bandwidth()/2;;
+                        })
+                        .attr("y", function(d) {
+                        return yScale(d)+14;
+                        })
+                        .attr("font-family", "sans-serif")
+                        .attr("font-size", "11px")
+                        .attr("fill", "white"); 
+				})
+	
+	//Create bars	
+	svg.selectAll("rect")
+		.data(dataset)
+		.enter()
+		.append("rect")
+		.attr("x", function(d, i){
+			return xScale(i)+20;
+		})
+		.attr("y", function(d){
+			return yScale(d);
+		})
+		.attr("width", xScale.bandwidth())
+		.attr("height", function(d) {
+			return h-yScale(d)})
+		.attr("fill", function(d){
+				return "rgb(0, 0, " + (d * 10) + ")";
+			});
+			
+	//Create labels
+	svg.selectAll("text")
+            .data(dataset)
+            .enter()
+            .append("text")
+			.text(function(d) {
+				return d;
+			})
+			.attr("text-anchor", "middle")
+            .attr("x", function(d, i) {
+                return xScale(i) + 20 + xScale.bandwidth() / 2;
+            })
+            .attr("y", function(d) {
+                return yScale(d) + 14;
+            })
+            .attr("font-family", "sans-serif")
+			.attr("font-size", "11px")
+            .attr("fill", "white");
+
+	//Width		
+	svg.append("g")
+        .attr("transform","translate(0, "+(h - barPadding+10) +")")
+        .call(xAxis);
+    //Height
+    svg.append("g")
+        .attr("transform","translate("+(barPadding+10) +")")
+        .call(yAxis);
+		
+		</script>
+		
+		<p>
+			This paragraph is outside D3 script block
+		</p>
+		<footer>COS30045 Data Visualization - Lab 4</footer>
+		
+</body>
