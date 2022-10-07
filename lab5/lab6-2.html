@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="description"	content="Data Visualisation Exercise 4"/>
+	<meta name="keywords"		  content="HTML, CSS, D3"/>
+	<meta name="author"			  content="Eu Jin"/>
+	
+	<title>Task 6.2 D3 Interactivity - Sort</title>
+	
+	<style>
+	.button1 {
+      background-color: #008CBA; 
+      color: white; 
+      border: 2px solid #008CBA;
+    }
+
+	.button1:hover {
+      background-color: white;
+      color: black;
+	}
+	
+	.button2 {
+      background-color: #FFA500; 
+      color: white; 
+      border: 2px solid #FFA500;
+    }
+
+	.button2:hover {
+      background-color: white;
+      color: black;
+	}
+	.button3 {
+      background-color: #228B22; 
+      color: white; 
+      border: 2px solid #228B22;
+    }
+
+	.button3:hover {
+      background-color: white;
+      color: black;
+	}
+	</style>
+
+	<script src="https://d3js.org/d3.v7.min.js"></script>
+	
+</head>
+<body>
+	<h1>Bar Chart with Mouse Over and Sort</h1>
+	<h2>Author : Eu Jin</h2>
+	
+	<button class="button button1" id="add">Add</button>
+	<button class="button button2" id="remove">Remove</button>
+	<button class="button button3" id="sort">Sort</button>
+	<br>
+	<p id="body"></p>
+	<script>
+	
+	//Max value for data
+    var maxValue = 25;
+	
+	// width and height
+	var w = 600;
+	var h = 250;
+	
+	var barPadding = 10;
+	var dataset=[5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+					11, 12, 15, 20, 18, 17, 16, 18, 23, 25];
+	
+	var xScale = d3.scaleBand()
+					.domain(d3.range(dataset.length))
+					.rangeRound([0, w])
+					.paddingInner(0.05);
+					
+	var yScale = d3.scaleLinear()
+					.domain([0,d3.max(dataset)])
+                    .range([0,h]);
+	
+	//Create SVG element
+	var svg = d3.select("#body") //Reference the id of the HTML element
+			.append("svg")
+			.attr("width", w)
+			.attr("height", h);
+			
+	var bars = svg.selectAll("rect")
+				.data(dataset);
+	
+	var registerMouseovers = function() {
+              svg.selectAll("rect")
+                  .on("mouseover", function(event,d) {
+            
+                    var xPosition = parseFloat(d3.select(this).attr("x"));
+                    var yPosition = parseFloat(d3.select(this).attr("y"));
+
+                    d3.select(this)
+                      .attr("fill", "orange");
+            
+                    svg.append("text")
+                      .attr("id", "tooltip")
+                      .attr("x", xPosition+5)
+                      .attr("y", yPosition+20)
+                      .text(d);
+                  })
+                  .on("mouseout", function() {
+                    d3.select(this)
+                      .attr("fill", function(d){
+                        return "rgb(0, 0, " + (d * 10) + ")";
+                    })
+                    d3.select("#tooltip")
+                      .remove();
+                  });
+                };
+	var Order=false;				
+
+    //Update
+    d3.select("#add")
+        .on("click", function(){
+                    
+                var newNumber = Math.floor(Math.random() * maxValue);
+                dataset.push(newNumber);
+          
+                var bars = svg.selectAll("rect").data(dataset);
+                xScale.domain(d3.range(dataset.length));
+          
+                bars.enter()
+                  .append("rect")
+                  .attr("x", function(d, i){
+                      return xScale(i)
+                  })
+                  .attr("y", function(d) {
+                    return  yScale(d);
+                  })
+                  .merge(bars)
+                  .transition()
+                  .delay(500)
+                  .attr("x", function(d, i) {
+                    return xScale(i);
+                  })
+                  .attr("y", function(d) {
+                    return h-yScale(d);
+                  })
+                  .attr("width", xScale.bandwidth())
+                  .attr("height", function(d) {
+                    return yScale(d);
+                  })
+                  .attr("fill", function(d){
+                        return "rgb(0, 0, " + (d * 10) + ")";
+                    })
+                    registerMouseovers();
+                  console.log(dataset.length); 
+ 
+            });
+             
+            //Remove
+            d3.select("#remove")
+                .on("click", function(){
+                    dataset.shift();
+                    //dataset.pop() remove right side first
+
+                    var bars = svg.selectAll("rect").data(dataset);
+                    var labels = svg.selectAll("text").data(dataset);
+                    xScale.domain(d3.range(dataset.length));
+
+                    bars.exit()
+                        .transition()
+                        .duration(500)
+                        .attr("x",w)
+                        .remove()
+
+                    bars.transition()
+                    //Update Smoothly
+                    .delay(500)
+                    .attr("x", function(d, i){
+                        return xScale(i);
+                    })
+                    .attr("y", function(d){
+                        return h-yScale(d);
+                    })
+                    .attr("width", xScale.bandwidth())
+                    .attr("height", function(d) {
+                        return yScale(d);})
+                    .attr("fill", function(d){
+                        return "rgb(0, 0, " + (d * 10) + ")";
+                    })
+                    registerMouseovers();
+                        console.log(dataset);
+
+            }); 
+			//Sort
+			var sortBars=function(){
+				Order=!Order;
+				svg.selectAll("rect")
+				.sort(function(a,b){
+					if (Order){
+						return d3.ascending(a,b);
+					}else{
+						return d3.descending(a,b);
+					}
+				})
+				.attr("x",function(d,i){
+					return xScale(i);
+				});
+			};             
+
+			d3.select("#sort")
+				.on("click",function(){
+					sortBars();
+				});
+                    
+    svg.selectAll("rect")
+                .data(dataset)
+                .enter()
+                .append("rect")
+                .attr("x", function(d, i){
+                return xScale(i);
+                })
+                .attr("y", function(d){
+                    return h-yScale(d);
+                })
+                .attr("width", xScale.bandwidth())
+                .attr("height", function(d) {
+                    return yScale(d)})
+                .attr("fill", function(d){
+                        return "rgb(0, 0, " + (d * 10) + ")";
+                 });
+                registerMouseovers();
+
+		</script>
+		
+		<p>
+			This paragraph is outside D3 script block
+		</p>
+		<footer>COS30045 Data Visualization - Lab 5</footer>
+		
+</body>
